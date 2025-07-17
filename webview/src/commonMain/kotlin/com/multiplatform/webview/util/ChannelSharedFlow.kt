@@ -35,7 +35,9 @@ import kotlinx.coroutines.launch
  * to consume them.
  */
 @OptIn(ExperimentalForInheritanceCoroutinesApi::class)
-interface ChannelSharedFlow<T> : SharedFlow<T>, FlowCollector<T>
+interface ChannelSharedFlow<T> :
+    SharedFlow<T>,
+    FlowCollector<T>
 
 fun <T> ChannelSharedFlow(
     scope: CoroutineScope,
@@ -43,13 +45,14 @@ fun <T> ChannelSharedFlow(
     bufferCapacity: Int = Channel.BUFFERED,
     onBufferOverflow: BufferOverflow = BufferOverflow.SUSPEND,
     onUndeliveredElement: ((T) -> Unit)? = null,
-): ChannelSharedFlow<T> = ChannelSharedFlowImpl(
-    scope = scope,
-    replay = replay,
-    bufferCapacity = bufferCapacity,
-    onBufferOverflow = onBufferOverflow,
-    onUndeliveredElement = onUndeliveredElement,
-)
+): ChannelSharedFlow<T> =
+    ChannelSharedFlowImpl(
+        scope = scope,
+        replay = replay,
+        bufferCapacity = bufferCapacity,
+        onBufferOverflow = onBufferOverflow,
+        onUndeliveredElement = onUndeliveredElement,
+    )
 
 private class ChannelSharedFlowImpl<T>(
     scope: CoroutineScope,
@@ -58,19 +61,20 @@ private class ChannelSharedFlowImpl<T>(
     onBufferOverflow: BufferOverflow = BufferOverflow.SUSPEND,
     onUndeliveredElement: ((T) -> Unit)? = null,
 ) : ChannelSharedFlow<T> {
-
-    private val channel = Channel(
-        capacity = bufferCapacity,
-        onBufferOverflow = onBufferOverflow,
-        onUndeliveredElement = onUndeliveredElement,
-    )
-    private val shared = channel
-        .receiveAsFlow()
-        .shareIn(
-            scope = scope,
-            started = SharingStarted.WhileSubscribed(),
-            replay = replay,
+    private val channel =
+        Channel(
+            capacity = bufferCapacity,
+            onBufferOverflow = onBufferOverflow,
+            onUndeliveredElement = onUndeliveredElement,
         )
+    private val shared =
+        channel
+            .receiveAsFlow()
+            .shareIn(
+                scope = scope,
+                started = SharingStarted.WhileSubscribed(),
+                replay = replay,
+            )
 
     init {
         scope.launch {
