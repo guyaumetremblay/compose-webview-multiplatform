@@ -8,6 +8,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import com.multiplatform.webview.request.RequestInterceptor
+import com.multiplatform.webview.util.ChannelSharedFlow
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -116,7 +117,7 @@ class WebViewNavigator(
      * A [MutableSharedFlow] of [NavigationEvent]s that is used to communicate navigation events
      * from the composable to the [IWebView].
      */
-    private val navigationEvents: MutableSharedFlow<NavigationEvent> = MutableSharedFlow(replay = 1)
+    private val navigationEvents: ChannelSharedFlow<NavigationEvent> = ChannelSharedFlow(scope = coroutineScope)
 
     /**
      * Handles navigation events from the composable and calls the appropriate method on the
