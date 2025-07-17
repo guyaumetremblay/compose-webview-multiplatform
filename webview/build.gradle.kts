@@ -112,8 +112,12 @@ fun org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget.setUpiOSObserver()
         }
     }
 }
-
-mavenPublishing {
-    publishToMavenCentral(com.vanniktech.maven.publish.SonatypeHost.S01, automaticRelease = true)
-    signAllPublications()
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/guyaumetremblay/compose-webview-multiplatform")
+            credentials(PasswordCredentials::class)
+        }
+    }
 }
