@@ -5,6 +5,7 @@ on:
       - main
       - feature/ci_setup
   pull_request:
+  workflow_dispatch:
 
 jobs:
   build-multiplatform-project:
