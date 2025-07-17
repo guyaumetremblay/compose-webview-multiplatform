@@ -23,9 +23,12 @@ jobs:
           java-version: '17'
       - name: Build Multiplatform project
         shell: bash
+        run: |
+          ./gradlew assemble
+      - name: Publish
+        shell: bash
+        run: ./gradlew publishAllPublicationsToGitHubPackagesRepository
         env:
           ORG_GRADLE_PROJECT_githubPackagesUsername: ${{ secrets.PACKAGE_USERNAME }}
           ORG_GRADLE_PROJECT_githubPackagesPassword: ${{ secrets.PACKAGE_TOKEN }}
-        run: |
-          ./gradlew assemble
-          ./gradlew publishAllPublicationsToGitHubPackagesRepository
+
